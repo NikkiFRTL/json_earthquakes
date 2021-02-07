@@ -4,13 +4,13 @@ from plotly import offline
 
 
 # Изучение структуры данных
-filename = 'eq_data_30_day_m1.json'
-with open(filename) as f:
+filename = 'eq_data_30_days_2021.geojson'
+with open(filename, 'r', encoding='utf-8') as f:
     all_eq_data = json.load(f)
 
 """
-# Использовалось 1 раз для формирования читаемого файла.
-readable_file = 'readable_eq_data.json'
+# Использовалось 1 раз для формирования читаемого файла для просмотра кода самому.
+readable_file = 'readable_eq_data_30_days_2021.json'
 with open(readable_file, 'w') as f:
     # dump() получает объект JSON и файл куда нужно записать данные, indent - форматировать с отступами = 4.
     json.dump(all_eq_data, f, indent=4)
@@ -20,16 +20,12 @@ with open(readable_file, 'w') as f:
 all_eq_dicts = all_eq_data['features']
 
 # Список с магнитудами и координатами (долгота + широта), информация о месте землетрясерния при наведении на маркер.
-mags, lons, lats, info = [], [], [], []
-for eq_dict in all_eq_dicts:
-    mag = eq_dict['properties']['mag']
-    lon = eq_dict['geometry']['coordinates'][0]
-    lat = eq_dict['geometry']['coordinates'][1]
-    title = eq_dict['properties']['title']
-    lons.append(lon)
-    lats.append(lat)
-    mags.append(mag)
-    info.append(title)
+mags = [eq_dict['properties']['mag'] for eq_dict in all_eq_dicts if eq_dict['properties']['mag'] and
+        eq_dict['properties']['mag'] > 4]
+lons = [eq_dict['geometry']['coordinates'][0] for eq_dict in all_eq_dicts]
+lats = [eq_dict['geometry']['coordinates'][1] for eq_dict in all_eq_dicts]
+info = [eq_dict['properties']['title'] for eq_dict in all_eq_dicts]
+
 
 # Нанесение данных на карту
 data = [{
@@ -48,4 +44,4 @@ data = [{
 
 my_layout = Layout(title='Global Earthquakes in 30 days')
 fig = {'data': data, 'layout': my_layout}
-offline.plot(fig, filename='global_earthquakes.html')
+offline.plot(fig, filename='global_earthquakes_2021.html')
