@@ -42,6 +42,7 @@ data = [{
     },
 }]
 
+filename_html = f"{all_eq_data['metadata']['title']}.html"
 my_layout = Layout(title='Global Earthquakes in 30 days')
 fig = {'data': data, 'layout': my_layout}
-offline.plot(fig, filename='global_earthquakes_2021.html')
+offline.plot(fig, filename=filename_html)
